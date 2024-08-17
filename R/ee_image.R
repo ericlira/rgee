@@ -418,6 +418,7 @@ ee_as_rast <- function(image,
                        add_metadata = TRUE,
                        timePrefix = TRUE,
                        quiet = FALSE,
+                       force_create = FALSE,
                        ...) {
 
   ee_check_packages("ee_as_stars", c("terra", "sf", "future"))
@@ -498,7 +499,7 @@ ee_as_rast <- function(image,
       ee$List$getInfo()
 
     # Create a proxy-star object
-    ee_read_rast(img_dsn$dsn, band_names, img_dsn$metadata)
+    ee_read_rast(img_dsn$dsn, band_names, img_dsn$metadata, force_create)
   }
 
   if (lazy) {
@@ -951,8 +952,8 @@ ee_read_stars <- function(img_dsn, band_names, metadata) {
 
 #' helper function to read raster (ee_as_raster)
 #' @noRd
-ee_read_raster <- function(img_dsn, band_names, metadata) {
-  if (length(img_dsn) > 1) {
+ee_read_raster <- function(img_dsn, band_names, metadata, force_create = F) {
+  if (!force_create && length(img_dsn) > 1) {
     message("NOTE: To avoid memory excess problems, ee_as_raster will",
             " not build Raster objects for large images.")
     img_dsn
@@ -966,8 +967,8 @@ ee_read_raster <- function(img_dsn, band_names, metadata) {
 
 #' helper function to read raster (ee_as_raster)
 #' @noRd
-ee_read_rast <- function(img_dsn, band_names, metadata) {
-  if (length(img_dsn) > 1) {
+ee_read_rast <- function(img_dsn, band_names, metadata, force_create = F) {
+  if (!force_create && length(img_dsn) > 1) {
     message(
       "NOTE: To avoid memory excess problems, ee_as_rast will",
       " not build Raster objects for large images."
